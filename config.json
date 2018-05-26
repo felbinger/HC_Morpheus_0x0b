@@ -1,0 +1,17 @@
+{
+    "db": {
+       "host": "localhost",
+       "port": "3306",
+       "user": "root",
+       "pass": "",
+       "name": "hackingchallenge",
+       "charset": "utf8"
+    },
+    "shell": {
+      "port": 1338,
+      "gpgdir": "/home/user/gpg"
+    },
+    "web": {
+      "port": 8080
+    }
+}
