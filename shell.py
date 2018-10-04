@@ -10,7 +10,7 @@ path = config["shell"]["gpgdir"]
 port = config["shell"]["port"]
 
 gpg = gnupg.GPG(homedir=path)
-db = MySQL(config["db"]["host"], config["db"]["port"], config["db"]["user"], config["db"]["pass"], config["db"]["name"], config["db"]["charset"])
+connection_data = (config["db"]["host"], config["db"]["port"], config["db"]["user"], config["db"]["pass"], config["db"]["name"], config["db"]["charset"])
 
 def client_handler(connection, fingerprint):
     try:
@@ -39,6 +39,7 @@ def client_handler(connection, fingerprint):
                         connection.send(b"copyright     - Show the copyright informations\n")
                         connection.send(b"help          - Show this helppage\n")
                     else:
+                        db = MySQL(*connection_data)
                         if data.upper().startswith("INSERT INTO"):
                             try:
                                 rid = db.update(data)
