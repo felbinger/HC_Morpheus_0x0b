@@ -5,8 +5,9 @@ from flask import Flask, request, jsonify, abort, render_template
 from mysql import MySQL
 
 config = json.loads(open("config.json").read())
+db_data = (config["db"]["host"], config["db"]["port"], config["db"]["user"], config["db"]["pass"], config["db"]["name"], config["db"]["charset"])
 try:
-    db = MySQL(config["db"]["host"], config["db"]["port"], config["db"]["user"], config["db"]["pass"], config["db"]["name"], config["db"]["charset"])
+    db = MySQL(*db_data)
 except Exception as e:
     raise Exception('Database Error')
 
@@ -27,6 +28,10 @@ def login():
         return jsonify({'error': 'missing key \'username\''}), 400
     if 'password' not in data:
         return jsonify({'error': 'missing key \'password\''}), 400
+    try:
+      db = MySQL(*db_data)
+    except Exception as e:
+      raise Exception('Database Error')
     usr = db.query('SELECT password FROM itrago WHERE username = "{}"'.format(data["username"]))
     if usr is not None and usr.get("password") == hashlib.sha1(data['password'].encode()).hexdigest():
         return jsonify({'msg': msg}), 200
